@@ -35,6 +35,7 @@ install-deps:
 
 install-stubs:
 	source $(VENV)/bin/activate && pip install -U micropython-stm32-stubs --no-user --target $(TYPINGS_DIR)
+	source $(VENV)/bin/activate && pip install git+https://github.com/eps-works/sdk-stubs.git  --target $(TYPINGS_DIR)
 
 
 # Build
