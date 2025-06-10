@@ -1,4 +1,10 @@
-# Set the directory where your Python files are located
+# Project Setup Configuration
+VENV = .venv
+TYPINGS_DIR = typings
+REQUIREMENTS = requirements.txt
+KEEP = utoml.pyi
+
+# Build Configuration
 LIB_DIR = src
 BUILD_DIR = build
 
@@ -18,18 +24,40 @@ PY_FILES = $(shell find $(LIB_DIR) -type f -name "*.py")
 # Define target for all .mpy files in the build directory
 MPY_FILES = $(patsubst $(LIB_DIR)/%.py,$(BUILD_DIR)/%.mpy,$(PY_FILES))
 
-# The default target
-all: $(MPY_FILES)
 
-# Rule to compile .py to .mpy using mpy-cross
+# TARGETS -----------------------------------------------------------------
+
+# Setup & Dependency Installation
+setup: install-deps install-stubs
+
+install-deps:
+	source $(VENV)/bin/activate && pip install -r $(REQUIREMENTS)
+
+install-stubs:
+	source $(VENV)/bin/activate && pip install -U micropython-stm32-stubs --no-user --target $(TYPINGS_DIR)
+
+
+# Build
+build: $(MPY_FILES)
+
 $(BUILD_DIR)/%.mpy: $(LIB_DIR)/%.py
 	@mkdir -p $(dir $@)
-	@echo "Compiling $< to $@..."
+	@echo "Compiling $< to $@"
 	$(MPY_CROSS) -o $@ $<
 
-# Clean target to remove all .mpy files from the build directory
-clean:
-	@echo "Cleaning up .mpy files in $(BUILD_DIR)..."
+
+# Clean
+clean-setup:
+	@echo "Cleaning $(TYPINGS_DIR)..."
+	@rm -rf $(TYPINGS_DIR)/*
+
+clean-build:
+	@echo "Cleaning up build directory..."
 	@rm -rf $(BUILD_DIR)
 
-.PHONY: all clean debug
+clean: clean-setup clean-build
+
+# Optional: rebuild everything
+rebuild: clean-build build
+
+.PHONY: setup install-deps install-stubs build clean clean-build clean-setup rebuild

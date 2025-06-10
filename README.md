@@ -2,27 +2,22 @@
 
 A template for projects using the Ardusimple SDK, a custom MicroPython firmware distribution with pre-installed utilities and hardware abstractions. The goal is to enhance developer experience (DX) and application development by integrating modern tooling like type hints, linter, formatter, testing and production build pipeline.
 
+This template already contains stubs for extra modules shipped with the Ardusimple's firmware, as `utoml` and `sdk`.
+
 ## Get Started
 
 Start a new project using this template. Fill up the `pyproject.toml` file with the information of your project.
 
-Create and activate a virtual environment, and install all dependencies. Make sure your editor uses the virtual environment.
+Create and activate a virtual environment and setup the project
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 
-pip install -r requirements.txt
+make setup
 ```
 
 Make sure to have [Black Formatter active](https://dev.to/adamlombard/how-to-use-the-black-python-code-formatter-in-vscode-3lo0) in your IDE.
-
-This template already contains stubs for extra modules shipped with the Ardusimple's firmware, as `utoml`. Micropython and SDK stubs can be installed with the following commands.
-
-```bash
-pip install -U micropython-stm32-stubs --no-user --target ./typings
-pip install git+https://github.com/eps-works/sdk-stubs.git --target ./typings
-```
 
 ## Tests
 
@@ -42,6 +37,7 @@ Your application can be compiled into `.mpy` files for better performance and me
 Be sure you have [mpy-cross](https://pypi.org/project/mpy-cross/) and Make installed.
 
 ```bash
-make clean  # Optional. Remove build directory
-make all
+make build
+make rebuild # Build a clean new version
+make clean-build  # Optional. Remove build directory
 ```
