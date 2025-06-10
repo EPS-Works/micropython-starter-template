@@ -8,5 +8,4 @@ __pycache__/
 .vscode
 *.pyc
 
-typings/*
-!typings/utoml.pyi
+typings
