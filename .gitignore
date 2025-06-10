@@ -1,0 +1,12 @@
+.DS_Store
+
+.venv
+build
+
+__pycache__/
+.pytest_cache
+.vscode
+*.pyc
+
+typings/*
+!typings/utoml.pyi

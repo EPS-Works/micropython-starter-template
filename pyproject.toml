@@ -1,0 +1,32 @@
+[project]
+name = "sdk-starter-template"
+description = "Starter project template for the Ardusimple SDK"
+version = "0.1.0"
+keywords = ["micropython", "ardusimple", "sdk"]
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+  {name = "{name}", email = "{email@domain}"},
+]
+
+[project.urls]
+Repository = "https://github.com/{owner}/{project}"
+Issues = "https://github.com/{owner}/{project}/issues"
+
+[tool.pyright]
+include = ["src"]
+exclude = ["typings", "**/__pycache__"]
+strict = ["src"]
+extraPaths = ["src", "typings"]
+reportMissingModuleSource = false
+
+[tool.pylint]
+ignore = ["__pycache__", ".venv", "typings"]
+init-hook = "import sys; sys.path.append('typings')"
+additional-builtins = ["const"]
+disable = [
+    "import-error", # Ignore missing import warnings for stubs
+]
+
+[tool.black]
+line-length = 100
