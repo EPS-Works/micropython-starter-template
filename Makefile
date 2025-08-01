@@ -8,15 +8,9 @@ KEEP = utoml.pyi
 LIB_DIR = src
 BUILD_DIR = build
 
-# Try to detect mpy-cross using 'which'
-MPY_CROSS = $(shell which mpy-cross)
-
-# Fallback to a default location if not found
-ifneq ($(MPY_CROSS),)
-    $(info Found mpy-cross at $(MPY_CROSS))
-else
-    $(error mpy-cross not found! Please install mpy-cross or specify the path in the Makefile.)
-endif
+# Define mpy-cross path - will be available after installing dependencies
+MPY_CROSS_CHECK = $(shell if [ -f "$(VENV)/bin/mpy-cross" ]; then echo "$(VENV)/bin/mpy-cross"; else which mpy-cross 2>/dev/null; fi)
+MPY_CROSS = $(if $(MPY_CROSS_CHECK),$(MPY_CROSS_CHECK),$(VENV)/bin/mpy-cross)
 
 # Find all .py files in LIB_DIR and its subdirectories
 PY_FILES = $(shell find $(LIB_DIR) -type f -name "*.py")
@@ -39,7 +33,14 @@ install-stubs:
 
 
 # Build
-build: $(MPY_FILES)
+build: check-mpy-cross $(MPY_FILES)
+
+check-mpy-cross:
+	@if [ ! -f "$(MPY_CROSS)" ]; then \
+		echo "Error: mpy-cross not found at $(MPY_CROSS)"; \
+		echo "Please run 'make setup' first to install dependencies."; \
+		exit 1; \
+	fi
 
 $(BUILD_DIR)/%.mpy: $(LIB_DIR)/%.py
 	@mkdir -p $(dir $@)
@@ -61,4 +62,4 @@ clean: clean-setup clean-build
 # Optional: rebuild everything
 rebuild: clean-build build
 
-.PHONY: setup install-deps install-stubs build clean clean-build clean-setup rebuild
+.PHONY: setup install-deps install-stubs build check-mpy-cross clean clean-build clean-setup rebuild
