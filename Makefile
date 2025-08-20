@@ -31,6 +31,11 @@ install-stubs:
 	source $(VENV)/bin/activate && pip install -U micropython-stm32-stubs --no-user --target $(TYPINGS_DIR)
 	source $(VENV)/bin/activate && pip install git+https://github.com/eps-works/sdk-stubs.git  --target $(TYPINGS_DIR)
 
+update-stubs:
+	@echo "Updating stubs..."
+	source $(VENV)/bin/activate && \
+	pip install --upgrade --force-reinstall micropython-stm32-stubs --no-user --target $(TYPINGS_DIR) && \
+	pip install --upgrade --force-reinstall git+https://github.com/eps-works/sdk-stubs.git --target $(TYPINGS_DIR)
 
 # Build
 build: check-mpy-cross $(MPY_FILES)
